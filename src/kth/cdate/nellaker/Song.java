@@ -11,13 +11,13 @@ import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Track;
 
 public class Song {
-	
+
 	private static ArrayList<Integer> tones;
 	private static final int NOTE_ON = 0x90;
 	private static final int NOTE_OFF = 0x80;
 	private static final String[] NOTE_NAMES = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
 
-	
+
 	public Song(File midi)
 	{
 		try {
@@ -27,26 +27,52 @@ public class Song {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public Song()
 	{
 		int scaleLength = 20;
 		tones = new ArrayList<Integer>();
 		for(int i = 0 ; i<20 ; i++)
-		{
 			tones.add(i);
-		}
-		
 	}
-	
+
 	public int getTone(int i)
 	{
 		return tones.get(i);
 	}
-	
+
 	public int getLength()
 	{
 		return tones.size();
+	}
+
+	public static String getNoteName(int i)
+	{
+		return NOTE_NAMES[i % 12];
+	}
+	
+	public static int getOctave(int i)
+	{
+		return (i / 12)-1;
+	}
+	
+	public ArrayList<Integer> parseMidi(File midi) throws Exception {
+		Sequence sequence = MidiSystem.getSequence(midi);
+		ArrayList<Integer> notes = new ArrayList<Integer>();
+		for (Track track :  sequence.getTracks()) {
+			for (int i=0; i < track.size(); i++) { 
+				MidiEvent event = track.get(i);
+				MidiMessage message = event.getMessage();
+				if (message instanceof ShortMessage) {
+					ShortMessage sm = (ShortMessage) message;
+					if (sm.getCommand() == NOTE_ON && sm.getData2()>0) { // Check so it is a hit and that it has velocity
+						
+						notes.add(sm.getData1()); // Adds the note to the list
+					} 
+				} 
+			}         
+		}
+		return notes;
 	}
 	
 	public String toString()
@@ -58,56 +84,4 @@ public class Song {
 		}
 		return sb.toString();
 	}
-
-	public static String getNoteName(int i)
-	{
-		int note = i % 12;
-		 int octave = (i / 12)-1;
-        return NOTE_NAMES[note]+octave;
-	}
-	public ArrayList<Integer> parseMidi(File midi) throws Exception {
-        Sequence sequence = MidiSystem.getSequence(midi);
-        ArrayList<Integer> notes = new ArrayList<Integer>();
-        int trackNumber = 0;
-        for (Track track :  sequence.getTracks()) {
-            trackNumber++;
-            System.out.println("Track " + trackNumber + ": size = " + track.size());
-            System.out.println();
-            for (int i=0; i < track.size(); i++) { 
-                MidiEvent event = track.get(i);
-                System.out.print("@" + event.getTick() + " ");
-                MidiMessage message = event.getMessage();
-                if (message instanceof ShortMessage) {
-                    ShortMessage sm = (ShortMessage) message;
-                    System.out.print("Channel: " + sm.getChannel() + " ");
-                    if (sm.getCommand() == NOTE_ON && sm.getData2()>0) {
-                        int key = sm.getData1();
-                        int octave = (key / 12)-1;
-                        int note = key % 12;
-                        String noteName = NOTE_NAMES[note];
-                        int velocity = sm.getData2();
-                        System.out.println("Note on, " + noteName + octave + " key=" + key + " velocity: " + velocity);
-                        notes.add(key);
-                    } else if (sm.getCommand() == NOTE_OFF) {
-                        int key = sm.getData1();
-                        int octave = (key / 12)-1;
-                        int note = key % 12;
-                        String noteName = NOTE_NAMES[note];
-                        int velocity = sm.getData2();
-                        System.out.println("Note off, " + noteName + octave + " key=" + key + " velocity: " + velocity);
-                    } else {
-                        System.out.println("Command:" + sm.getCommand());
-                    }
-                } else {
-                    System.out.println("Other message: " + message.getClass());
-                }
-            }
-
-            System.out.println();
-            
-            
-        }
-        return notes;
-	}
-
 }
