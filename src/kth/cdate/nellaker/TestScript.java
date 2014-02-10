@@ -12,8 +12,8 @@ public class TestScript {
 
 		ft.generateTree(song);
 
-
-		System.out.println("Hello World!");
+		String out = ft.getBestSequence();
+		System.out.println(out);
 	}
 
 }

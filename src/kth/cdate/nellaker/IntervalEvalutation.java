@@ -52,8 +52,11 @@ public class IntervalEvalutation {
 			// Set the index for the Reach Arrays.
 			fIndex = getFIndex(finger1, finger2);
 
-			int interval = song.getTone(nn.getIndex())-song.getTone(nn.getParent().getIndex());
-
+			int interval = Math.abs(song.getTone(nn.getIndex())-song.getTone(nn.getParent().getIndex()));
+			
+			if(nn.getFinger() < nn.getParent().getFinger())
+				interval *= -1;
+			
 			if(fIndex == -1 && song.getTone(nn.getParent().getIndex())==song.getTone(nn.getIndex()))
 				return 0;
 			else if(fIndex == -1)
@@ -69,9 +72,9 @@ public class IntervalEvalutation {
 			{
 				score += (interval - maxComf[fIndex])*2;
 			}
-			else if(interval < maxComf[fIndex])
+			else if(interval < minComf[fIndex])
 			{
-				score += (maxComf[fIndex]-interval)*2;
+				score += (minComf[fIndex]-interval)*2;
 			}
 
 			/*
@@ -161,8 +164,11 @@ public class IntervalEvalutation {
 				 * 
 				 * Needs 2 past node
 				 */
+				
 				int interval2 = song.getTone(nn.getIndex()) - song.getTone(nn.getParent().getParent().getIndex());
-				int fIndex2 = getFIndex(nn.getFinger(), nn.getParent().getParent().getFinger());
+				if(nn.getFinger() < nn.getParent().getParent().getFinger())
+					interval2 *= -1;
+				int fIndex2 = Math.abs(getFIndex(nn.getFinger(), nn.getParent().getParent().getFinger()));
 				
 				if(fIndex2 == -1)
 					return 300;

@@ -32,10 +32,34 @@ public class FingerTree {
 			// Evaluate score of the current node
 			current.generateValue();
 			// Generate children and add to queue
-			current.generateChildren(queue);
-
-
-
+			ArrayList<NoteNode> leafs = current.generateChildren(queue);
+			if(leafs != null)
+			{
+				for(int i = 0 ; i<5 ; i++)
+				{
+					leafs.get(i).zeroCurrentValue();
+					leafs.get(i).updateParents();
+				}
+			}
 		}
+		
+		
+		for(int i = 0 ; i<5 ; i++)
+		{
+			if(best != null)
+			{
+				if(root.get(i).getCurrentScore()+root.get(i).getLocalScore()<best.getCurrentScore()+best.getLocalScore())
+					best = root.get(i);
+			}
+			else
+			{
+				best = root.get(i);
+			}
+		}
+	}
+	
+	public String getBestSequence()
+	{
+		return best.toString();
 	}
 }
