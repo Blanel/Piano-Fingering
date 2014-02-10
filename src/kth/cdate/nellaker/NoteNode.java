@@ -7,97 +7,59 @@ import java.util.LinkedList;
 public class NoteNode {
 
 	private int songIndex;
-	private int rightHand;
+	private Song song;
 
-	private int switches = Integer.MAX_VALUE;
+	private int finger;
+
 	private ArrayList<NoteNode> children;
 	private NoteNode bestChild;
 	private NoteNode parent;
 
-	public NoteNode(int songIndex, int rightHand, NoteNode parent) {
+	private int localScore; // The score of the current node with respect to rules
+
+	public NoteNode(int songIndex, int finger, NoteNode parent, Song song) {
 		this.songIndex = songIndex;
-		this.rightHand = rightHand;
+		this.finger = finger;
 		this.parent = parent;
+		this.song = song;
+		children = new ArrayList<NoteNode>();
 	}
 
-	public void searchValue(LinkedList<NoteNode> found, Song s)
-	{
-		int tempIndex = songIndex+1;
-		for(tempIndex = songIndex+1 ; tempIndex< s.getLength() && isInRange(s.getTone(tempIndex))  ; tempIndex++)
-		{
-			// Search for how long song can be played without replace of hands.
-		}
-
-		for(int i = 0 ; i<5 ; i++)
-		{
-			if(tempIndex<s.getLength())
-			{
-				//if(handsValid(s.getTone(tempIndex)-i,rightHand))
-				//	found.add(new NoteNode(tempIndex, s.getTone(tempIndex)-i, rightHand, this));
-				//if(handsValid(leftHand, s.getTone(tempIndex)-i))
-					found.add(new NoteNode(tempIndex, s.getTone(tempIndex)-i, this));
-			}
-			else
-			{
-				switches = 0;
-				updateParents();
-				i = 5;
-			}
-		}
-	}
-
-	private boolean isInRange(int tone)
-	{
-		if(/*(tone >= leftHand && tone <= leftHand+4) ||*/ (tone >= rightHand && tone <= rightHand+9))
-			return true;
-		return false;
-	}
-
-	/*private boolean handsValid(int leftHand, int rightHand)
-	{
-		if(leftHand > rightHand)
-			return false;
-		if(leftHand+4>= rightHand)
-			return false;
-		return true;
-	}*/
-
-	private void updateParents()
-	{
-		if(parent == null)
-			return;
-		if(switches<parent.getSwitches())
-		{
-			parent.setBestChild(this);
-			parent.updateParents();
-		}
-
-	}
-
-	public int getSwitches()
-	{
-		return switches;
-	}
-
-	public void setBestChild(NoteNode n)
-	{
-		bestChild = n;
-		switches = n.getSwitches()+1;
-	}
 	public NoteNode getBestChild()
 	{
 		return bestChild;
 	}
 
-
-	public int getRightHand()
+	public void generateChildren(LinkedList<NoteNode> queue)
 	{
-		return rightHand;
+		if(songIndex+1 < song.getLength())
+		{
+			for(int i = 1 ; i<=5 ; i++)
+			{
+				NoteNode c = new NoteNode(songIndex+1, i, this, song);
+				queue.add(c);
+				children.add(c);
+			}
+		}
 	}
-	
+
+	public void generateValue()
+	{
+		localScore = IntervalEvalutation.getScore(this, song);
+	}
+
+	public int getFinger()
+	{
+		return finger;
+	}
+
 	public int getIndex()
 	{
 		return songIndex;
 	}
 
+	public NoteNode getParent()
+	{
+		return parent;
+	}
 }

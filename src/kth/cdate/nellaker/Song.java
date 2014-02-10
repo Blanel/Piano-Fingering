@@ -17,7 +17,6 @@ public class Song {
 	private static final int NOTE_OFF = 0x80;
 	private static final String[] NOTE_NAMES = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
 
-
 	public Song(File midi)
 	{
 		try {
@@ -30,9 +29,9 @@ public class Song {
 
 	public Song()
 	{
-		int scaleLength = 20;
+		int scaleLength = 10;
 		tones = new ArrayList<Integer>();
-		for(int i = 0 ; i<20 ; i++)
+		for(int i = 0 ; i<scaleLength ; i++)
 			tones.add(i);
 	}
 
@@ -51,11 +50,19 @@ public class Song {
 		return NOTE_NAMES[i % 12];
 	}
 	
+	public static boolean isBlack(int i)
+	{
+		int num = i % 12;
+		if(num == 1 || num == 3 || num == 6 || num == 8 || num == 10)
+			return true;
+		return false;
+	}
+
 	public static int getOctave(int i)
 	{
 		return (i / 12)-1;
 	}
-	
+
 	public ArrayList<Integer> parseMidi(File midi) throws Exception {
 		Sequence sequence = MidiSystem.getSequence(midi);
 		ArrayList<Integer> notes = new ArrayList<Integer>();
@@ -66,7 +73,7 @@ public class Song {
 				if (message instanceof ShortMessage) {
 					ShortMessage sm = (ShortMessage) message;
 					if (sm.getCommand() == NOTE_ON && sm.getData2()>0) { // Check so it is a hit and that it has velocity
-						
+
 						notes.add(sm.getData1()); // Adds the note to the list
 					} 
 				} 
@@ -74,7 +81,7 @@ public class Song {
 		}
 		return notes;
 	}
-	
+
 	public String toString()
 	{
 		StringBuilder sb = new StringBuilder();

@@ -4,54 +4,38 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class FingerTree {
-	
+
 	private ArrayList<NoteNode> root;
 	private NoteNode best;
+	
 	public void generateTree(Song s)
 	{
 		LinkedList<NoteNode> queue = new LinkedList<NoteNode>();
 		root = new ArrayList<NoteNode>();
-		for(int i = 0 ; i<5 ; i++)
+
+		// Initialize the queue for each finger
+		for(int i = 1 ; i<=5 ; i++)
 		{
-			root.add(new NoteNode(0, s.getTone(0)-i, null));
-			queue.add(root.get(i));
+			// Add node to root list
+			root.add(new NoteNode(0, i, null,s));
+			// Add node to queue.
+			queue.add(root.get(i-1));
+			// Evaluate node value
 		}
-		
+		// Sort the queue
+
 		while(!queue.isEmpty())
 		{
+			// Pop the next node from the queue
 			NoteNode current = queue.removeFirst();
-			current.searchValue(queue, s);
-			if(best != null)
-				queue = new LinkedList<NoteNode>();
-				
-		}
-		
-		best = root.get(0);
-		
-		for(int i = 1 ; i<root.size() ; i++)
-		{
-			if(best.getSwitches() > root.get(i).getSwitches())
-				best = root.get(i);
-		}
-	}
-	
-	public String toString()
-	{
-		StringBuffer sb = new StringBuffer();
-		
-		sb.append("Switches: "+ best.getSwitches());
-		sb.append("\nSequence: ");
-		NoteNode c = best;
-		while(c.getBestChild() != null)
-		{
-			sb.append("\nThumb placement: "+Song.getNoteName(c.getRightHand())+"\t"+c.getIndex());
-			c = c.getBestChild();
-		}
-		sb.append("\nRightHand: "+c.getRightHand());
-		
-		return sb.toString();
-	}
-	
-	
 
+			// Evaluate score of the current node
+			current.generateValue();
+			// Generate children and add to queue
+			current.generateChildren(queue);
+
+
+
+		}
+	}
 }
