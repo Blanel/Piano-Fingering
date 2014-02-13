@@ -14,9 +14,10 @@ public class Song {
 
 	private static ArrayList<Integer> tones;
 	private static final int NOTE_ON = 0x90;
-	private static final int NOTE_OFF = 0x80;
+	private static final int NOTE_OFF = 0x80;//  0     1    2    3     4    5    6     7    8     9    10   11
 	private static final String[] NOTE_NAMES = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
 	private static final int[] song = {0,2,4,5,7,9,11};
+	private static final int[] song2 = {69,60,69,76};
 	public Song(File midi)
 	{
 		try {
@@ -29,10 +30,12 @@ public class Song {
 
 	public Song()
 	{
-		int scaleLength = 7;
+		int scaleLength = 45;
 		tones = new ArrayList<Integer>();
-		for(int i = 0 ; i<scaleLength ; i++)
-			tones.add(song[i]);
+		//for(int i = 0 ; i<scaleLength ; i++)
+		//	tones.add(i);
+		for(int i = 0; i<song2.length ; i++)
+			tones.add(song2[i]);
 	}
 
 	public int getTone(int i)
@@ -87,7 +90,7 @@ public class Song {
 		StringBuilder sb = new StringBuilder();
 		for(int i = 0 ; i < tones.size() ; i++)
 		{
-			sb.append(Song.getNoteName(tones.get(i))+"  ");
+			sb.append(Song.getNoteName(tones.get(i))+Song.getOctave(tones.get(i))+"  ");
 		}
 		return sb.toString();
 	}

@@ -3,6 +3,8 @@ package kth.cdate.nellaker;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+import com.scottlogic.util.SortedList;
+
 
 public class NoteNode {
 
@@ -11,8 +13,7 @@ public class NoteNode {
 
 	private int finger;
 
-	private ArrayList<NoteNode> children;
-	private NoteNode bestChild;
+	
 	private NoteNode parent;
 
 	private int localScore; // The score of the current node with respect to rules
@@ -23,15 +24,11 @@ public class NoteNode {
 		this.finger = finger;
 		this.parent = parent;
 		this.song = song;
-		children = new ArrayList<NoteNode>();
+		generateValue();
 	}
 
-	public NoteNode getBestChild()
-	{
-		return bestChild;
-	}
 
-	public ArrayList<NoteNode> generateChildren(LinkedList<NoteNode> queue)
+	public void generateChildren(SortedList<NoteNode> queue)
 	{
 		if(songIndex+1 < song.getLength())
 		{
@@ -39,25 +36,19 @@ public class NoteNode {
 			{
 				NoteNode c = new NoteNode(songIndex+1, i, this, song);
 				queue.add(c);
-				children.add(c);
-			}
-			if(songIndex+2 == song.getLength())
-			{
-				return children;
 			}
 		}
-		return null;
 	}
 
 	public void generateValue()
 	{
-		//currentScore = -1;
+		if(parent == null)
+			currentScore = 0;
+		else
+			currentScore = parent.getCurrentScore();
 		localScore = IntervalEvalutation.getScore(this, song);
+		currentScore += localScore;
 		
-	}
-	public void zeroCurrentValue()
-	{
-		currentScore = 0;
 	}
 
 	public int getFinger()
@@ -75,28 +66,7 @@ public class NoteNode {
 		return parent;
 	}
 	
-	public void updateParents()
-	{
-		NoteNode current = this;
-		while(current.parent != null)
-		{
-			if(current.parent.bestChild == null)
-			{
-				current.parent.bestChild = current;
-				current.parent.currentScore = current.currentScore+current.localScore;
-			}
-			else
-			{
-				if(current.parent.currentScore>current.localScore+current.currentScore)
-				{
-					current.parent.bestChild = current;
-					current.parent.currentScore = current.currentScore+current.localScore;
-					
-				}
-			}
-			current = current.parent;
-		}
-	}
+
 	
 	public int getCurrentScore()
 	{
@@ -112,12 +82,17 @@ public class NoteNode {
 	{
 		StringBuilder sb = new StringBuilder();
 		NoteNode current = this;
-		while(current.bestChild != null)
+		int[] fingering = new int[song.getLength()];
+		for(int i = 0 ; i<song.getLength() ; i++)
 		{
-			sb.append(current.getFinger());
-			current = current.bestChild;
+			fingering[song.getLength()-i-1] = current.getFinger();
+			current = current.parent;
 		}
-		sb.append(current.getFinger());
+		for(int i = 0 ; i<song.getLength() ; i++)
+		{
+			sb.append(fingering[i] + " ");
+		}
 		return sb.toString();
 	}
+	
 }
