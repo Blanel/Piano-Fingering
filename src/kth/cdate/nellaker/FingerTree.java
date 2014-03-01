@@ -39,12 +39,12 @@ public class FingerTree {
 		}
 		// Sort the queue
 		
-		while(!queue.isEmpty() && queue.get(0).getCurrentScore()<bestPath+offset)
+		while(!queue.isEmpty() && queue.get(0).getCurrentScore()<=bestPath+offset)
 		{
 			
 			//DebugMessage.msg(bestPath + " " +queue.get(0).getIndex()+" "+highestIndex+" "+queue.get(0).getCurrentScore() + " "+iterations--);
 			NoteNode current = queue.remove(0);
-			if(current.getIndex()== s.getLength()-1  && current.getCurrentScore()<bestPath+offset)
+			if(current.getIndex()== s.getLength()-1  && current.getCurrentScore()<=bestPath+offset)
 			{
 				best = current;
 				allBest.add(current);
@@ -64,6 +64,15 @@ public class FingerTree {
 	public String getBestSequence()
 	{
 		return best.toString();
+	}
+	public String getAllBest()
+	{
+		StringBuilder sb = new StringBuilder();
+		for(int i = 0 ; i<allBest.size() ; i++)
+		{
+			sb.append(allBest.get(i).toString()+"\n");
+		}
+		return sb.toString();
 	}
 	public NoteNode getBest()
 	{

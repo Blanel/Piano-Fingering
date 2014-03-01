@@ -15,12 +15,14 @@ public class NoteNode {
 
 	
 	private NoteNode parent;
+	private ArrayList<NoteNode> children;
 
 	private int localScore; // The score of the current node with respect to rules
 	private int currentScore = Integer.MAX_VALUE; // Aggregated score of best children
 
 	public NoteNode(int songIndex, int finger, NoteNode parent, Song song) {
 		this.songIndex = songIndex;
+		children = new ArrayList<NoteNode>();
 		this.finger = finger;
 		this.parent = parent;
 		this.song = song;
@@ -36,6 +38,7 @@ public class NoteNode {
 			{
 				NoteNode c = new NoteNode(songIndex+1, i, this, song);
 				queue.add(c);
+				children.add(c);
 			}
 		}
 	}
