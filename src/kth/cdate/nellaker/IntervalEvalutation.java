@@ -28,7 +28,7 @@ public class IntervalEvalutation {
 	public static int getScore(NoteNode nn, Song song)
 	{
 
-
+		boolean[] rulesTriggered = new boolean[12];
 		DebugMessage.msg("NEW NODE");
 		int score = 0;
 
@@ -42,6 +42,7 @@ public class IntervalEvalutation {
 		{
 			score += 1;
 			DebugMessage.msg("\tRule 6 triggered");
+			rulesTriggered[5]=true;
 		}
 			 
 
@@ -86,11 +87,13 @@ public class IntervalEvalutation {
 			if(interval > maxComf[fIndex])
 			{
 				DebugMessage.msg("\tRule 1 triggered");
+				rulesTriggered[0]=true;
 				score += (interval - maxComf[fIndex])*2;
 			}
 			else if(interval < minComf[fIndex])
 			{
 				DebugMessage.msg("\tRule 1 triggered");
+				rulesTriggered[0]=true;
 				score += (minComf[fIndex]-interval)*2;
 			}
 
@@ -108,11 +111,13 @@ public class IntervalEvalutation {
 				if(fIndex < 4)
 				{
 					DebugMessage.msg("\tRule 2 triggered");
+					rulesTriggered[1]=true;
 					score += (minRel[fIndex]-interval);
 				}
 				else
 				{
 					DebugMessage.msg("\tRule 2 triggered");
+					rulesTriggered[1]=true;
 					score += (minRel[fIndex]-interval)*2;
 				}
 			}
@@ -131,11 +136,13 @@ public class IntervalEvalutation {
 				if(fIndex < 4)
 				{
 					DebugMessage.msg("\tRule 3 triggered");
+					rulesTriggered[2]=true;
 					score += (interval-maxRel[fIndex]);
 				}
 				else
 				{
 					DebugMessage.msg("\tRule 3 triggered");
+					rulesTriggered[2]=true;
 					score += (interval-maxRel[fIndex])*2;
 				}
 			}
@@ -149,6 +156,7 @@ public class IntervalEvalutation {
 			if(nn.getParent().getFinger()==3 && nn.getFinger()==4)
 			{
 				DebugMessage.msg("\tRule 8 triggered");
+				rulesTriggered[7]=true;
 				score+=1;
 			}
 
@@ -162,6 +170,7 @@ public class IntervalEvalutation {
 			if((nn.getFinger() == 3 && nn.getParent().getFinger()==4 && Song.isBlack(song.getTone(nn.getParent().getIndex())) && !Song.isBlack(song.getTone(nn.getIndex()))) || (nn.getFinger() == 4 && nn.getParent().getFinger()==3 && !Song.isBlack(song.getTone(nn.getParent().getIndex())) && Song.isBlack(song.getTone(nn.getIndex()))))
 			{
 				DebugMessage.msg("\tRule 9 triggered");
+				rulesTriggered[8]=true;
 				score += 1;
 			}
 
@@ -180,6 +189,7 @@ public class IntervalEvalutation {
 				if(Song.isBlack(song.getTone(nn.getIndex())) == Song.isBlack(song.getTone(nn.getParent().getIndex())))
 				{
 					DebugMessage.msg("\tRule 12 triggered");
+					rulesTriggered[11]=true;
 					score += 1;
 				}
 				else
@@ -189,6 +199,7 @@ public class IntervalEvalutation {
 						if(!Song.isBlack(song.getTone(nn.getIndex())) && nn.getFinger()!=1 && nn.getParent().getFinger()==1)
 						{
 							DebugMessage.msg("\tRule 12 triggered");
+							rulesTriggered[11]=true;
 							score += 3;
 						}
 					}
@@ -197,6 +208,7 @@ public class IntervalEvalutation {
 						if(!Song.isBlack(song.getTone(nn.getParent().getIndex())) && nn.getParent().getFinger()!=1 && nn.getFinger()==1)
 						{
 							DebugMessage.msg("\tRule 12 triggered");
+							rulesTriggered[11]=true;
 							score += 3;
 						}
 					}
@@ -243,11 +255,13 @@ public class IntervalEvalutation {
 					if(nn.getParent().getFinger() == 1 && ((song.getTone(nn.getIndex()) < song.getTone(nn.getParent().getIndex()) && song.getTone(nn.getParent().getIndex()) < song.getTone(nn.getParent().getParent().getIndex())) || (song.getTone(nn.getIndex()) > song.getTone(nn.getParent().getIndex()) && song.getTone(nn.getParent().getIndex()) > song.getTone(nn.getParent().getParent().getIndex()))) && (interval2 > maxPrac[fIndex2])||(interval2 < minPrac[fIndex2]))
 					{
 						DebugMessage.msg("\tRule 4 triggered");
+						rulesTriggered[3]=true;
 						score +=2;
 					}
 					else
 					{
 						DebugMessage.msg("\tRule 4 triggered");
+						rulesTriggered[3]=true;
 						score +=1;
 					}
 				}
@@ -267,11 +281,13 @@ public class IntervalEvalutation {
 				if(interval2<minComf[fIndex2])
 				{
 					DebugMessage.msg("\tRule 5 triggered");
+					rulesTriggered[4]=true;
 					score += minComf[fIndex2]-interval2;
 				}
 				else if(interval2>maxComf[fIndex2])
 				{
 					DebugMessage.msg("\tRule 5 triggered");
+					rulesTriggered[4]=true;
 					score += interval2-maxComf[fIndex2];
 				}
 
@@ -287,6 +303,7 @@ public class IntervalEvalutation {
 				if(nn.getFinger() != nn.getParent().getFinger() && nn.getParent().getParent().getFinger() != nn.getParent().getFinger() && nn.getParent().getParent().getFinger() != nn.getFinger() && nn.getFinger()>=3 && nn.getParent().getFinger()>=3 && nn.getParent().getParent().getFinger()>=3)
 				{
 					DebugMessage.msg("\tRule 7 triggered");
+					rulesTriggered[6]=true;
 					score+=1;
 				}
 			}
@@ -304,6 +321,7 @@ public class IntervalEvalutation {
 			if(nn.getParent().getFinger()== 1 && Song.isBlack(song.getTone(nn.getParent().getIndex())))
 			{
 				DebugMessage.msg("\tRule 10 triggered");
+				rulesTriggered[9]=true;
 				score += 1;
 				if(nn.getIndex()>1 && !Song.isBlack(song.getTone(nn.getParent().getParent().getIndex())))
 					score+=2;
@@ -326,18 +344,20 @@ public class IntervalEvalutation {
 				if(!Song.isBlack(song.getTone(nn.getIndex())))
 				{
 					DebugMessage.msg("\tRule 11 triggered");
+					rulesTriggered[10]=true;
 					score +=2;
 				}
 				if(nn.getIndex()>1 && !Song.isBlack(song.getTone(nn.getParent().getParent().getIndex())))
 				{
 					DebugMessage.msg("\tRule 11 triggered");
+					rulesTriggered[10]=true;
 					score +=2;
 				}
 				
 			}
 		}
 
-
+		nn.setRules(rulesTriggered);
 
 
 		return score;

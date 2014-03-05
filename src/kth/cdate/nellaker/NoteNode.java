@@ -1,6 +1,7 @@
 package kth.cdate.nellaker;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 import com.scottlogic.util.SortedList;
@@ -19,6 +20,7 @@ public class NoteNode {
 
 	private int localScore; // The score of the current node with respect to rules
 	private int currentScore = Integer.MAX_VALUE; // Aggregated score of best children
+	private boolean[] rulesTriggered;
 
 	public NoteNode(int songIndex, int finger, NoteNode parent, Song song) {
 		this.songIndex = songIndex;
@@ -85,17 +87,55 @@ public class NoteNode {
 	{
 		StringBuilder sb = new StringBuilder();
 		NoteNode current = this;
-		int[] fingering = new int[song.getLength()];
+		LinkedList<FStringNode> fingering = new LinkedList<FStringNode>();
 		for(int i = 0 ; i<song.getLength() ; i++)
 		{
-			fingering[song.getLength()-i-1] = current.getFinger();
+			fingering.addFirst(new FStringNode(current));
 			current = current.parent;
 		}
-		for(int i = 0 ; i<song.getLength() ; i++)
+		Iterator<FStringNode> it = fingering.iterator();
+		while(it.hasNext())
 		{
-			sb.append(fingering[i] + " ");
+			sb.append(it.next().toString()+"\n");
 		}
 		return sb.toString();
+	}
+	
+	public void setRules(boolean[] rulesTriggered)
+	{
+		this.rulesTriggered = rulesTriggered;
+	}
+	
+	private class FStringNode
+	{
+		int finger;
+		String note;
+		int score;
+		boolean[] rulesTriggered;
+		
+		public FStringNode(NoteNode nn)
+		{
+			this.finger = nn.finger;
+			this.score = nn.localScore;
+			this.rulesTriggered = nn.rulesTriggered;
+			note = Song.getNoteName(song.getTone(nn.getIndex()))+Song.getOctave(song.getTone(nn.getIndex()));
+		}
+		
+		public String toString()
+		{
+			StringBuilder sb = new StringBuilder();
+			sb.append(finger+" "+note+" "+score+" [");
+			
+			for(int i = 0 ; i<11 ; i++)
+			{
+				if(rulesTriggered[i])
+					sb.append((i+1)+" ");
+			}
+			if(rulesTriggered[11])
+				sb.append(12);
+			sb.append("]");
+			return sb.toString();
+		}
 	}
 	
 }
