@@ -16,18 +16,20 @@ public class NoteNode {
 
 	
 	private NoteNode parent;
-	private ArrayList<NoteNode> children;
+	private int nextFinger;
+	//private ArrayList<NoteNode> children;
 
 	private int localScore; // The score of the current node with respect to rules
 	private int currentScore = Integer.MAX_VALUE; // Aggregated score of best children
 	private boolean[] rulesTriggered;
 
-	public NoteNode(int songIndex, int finger, NoteNode parent, Song song) {
+	public NoteNode(int songIndex, int finger, int nextFinger, NoteNode parent, Song song) {
 		this.songIndex = songIndex;
-		children = new ArrayList<NoteNode>();
+		//children = new ArrayList<NoteNode>();
 		this.finger = finger;
 		this.parent = parent;
 		this.song = song;
+		this.nextFinger = nextFinger;
 		generateValue();
 	}
 
@@ -38,9 +40,9 @@ public class NoteNode {
 		{
 			for(int i = 1 ; i<=5 ; i++)
 			{
-				NoteNode c = new NoteNode(songIndex+1, i, this, song);
-				queue.add(c);
-				children.add(c);
+				NoteNode temp = new NoteNode(songIndex+1, nextFinger, i, this, song);
+				temp.generateValue();
+				queue.add(temp);
 			}
 		}
 	}

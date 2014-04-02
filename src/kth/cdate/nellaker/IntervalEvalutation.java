@@ -62,6 +62,7 @@ public class IntervalEvalutation {
 			if(nn.getFinger() < nn.getParent().getFinger())
 				interval *= -1;
 			
+			// Check if the same finger is used twice
 			if(fIndex == -1 && song.getTone(nn.getParent().getIndex())==song.getTone(nn.getIndex()))
 			{
 				DebugMessage.msg("\tSame tone, same finger");
@@ -167,7 +168,21 @@ public class IntervalEvalutation {
 			 * 
 			 * Needs 1 past node
 			 */
-			if((nn.getFinger() == 3 && nn.getParent().getFinger()==4 && Song.isBlack(song.getTone(nn.getParent().getIndex())) && !Song.isBlack(song.getTone(nn.getIndex()))) || (nn.getFinger() == 4 && nn.getParent().getFinger()==3 && !Song.isBlack(song.getTone(nn.getParent().getIndex())) && Song.isBlack(song.getTone(nn.getIndex()))))
+			if(
+					(
+					nn.getFinger() == 3 && 
+					nn.getParent().getFinger()==4 && 
+					Song.isBlack(song.getTone(nn.getParent().getIndex())) && 
+					!Song.isBlack(song.getTone(nn.getIndex()))
+					) 
+					|| 
+					(
+					nn.getFinger() == 4 && 
+					nn.getParent().getFinger()==3 && 
+					!Song.isBlack(song.getTone(nn.getParent().getIndex())) && 
+					Song.isBlack(song.getTone(nn.getIndex()))
+					)
+				)
 			{
 				DebugMessage.msg("\tRule 9 triggered");
 				rulesTriggered[8]=true;
@@ -184,7 +199,16 @@ public class IntervalEvalutation {
 			 * 
 			 * Needs 1 past node
 			 */
-			if((song.getTone(nn.getIndex())<song.getTone(nn.getParent().getIndex()) && nn.getParent().getFinger()==1) || (song.getTone(nn.getIndex())>song.getTone(nn.getParent().getIndex()) && nn.getFinger()==1))
+			if(
+					(		
+							song.getTone(nn.getIndex())<song.getTone(nn.getParent().getIndex()) && 
+							nn.getParent().getFinger()==1
+					) || 
+					(
+							song.getTone(nn.getIndex())>song.getTone(nn.getParent().getIndex()) && 
+							nn.getFinger()==1
+					)
+				)
 			{
 				if(Song.isBlack(song.getTone(nn.getIndex())) == Song.isBlack(song.getTone(nn.getParent().getIndex())))
 				{
@@ -216,8 +240,8 @@ public class IntervalEvalutation {
 			}
 			
 
-			// Run rules dependant on 2 past nodes in history
-			if(nn.getIndex()>1)
+			// Run rules dependant on future node in history
+			if(nn.getIndex()+1<song.getLength())
 			{
 
 				/*

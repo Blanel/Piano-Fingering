@@ -32,10 +32,19 @@ public class FingerTree {
 		for(int i = 1 ; i<=5 ; i++)
 		{
 			// Add node to root list
-			root.add(new NoteNode(0, i, null,s));
-			// Add node to queue.
-			queue.add(root.get(i-1));
-			// Evaluate node value
+			for(int j = 1 ; j<=5 ; j++)
+			{
+				NoteNode temp = new NoteNode(0, i, j, null, s);
+				temp.generateValue();
+				root.add(temp);
+				
+			}
+		}
+		
+		// Queue all nodes in root
+		for(int i = 0 ; i<root.size() ; i++)
+		{
+			queue.add(root.get(i));
 		}
 		// Sort the queue
 		

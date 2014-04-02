@@ -30,12 +30,12 @@ public class Song {
 
 	public Song()
 	{
-		int scaleLength = 6;
+		//int scaleLength = 6;
 		tones = new ArrayList<Integer>();
-		for(int i = 0 ; i<scaleLength ; i++)
-			tones.add(i);
-		//for(int i = 0; i<song2.length ; i++)
-		//	tones.add(song2[i]);
+		//for(int i = 0 ; i<scaleLength ; i++)
+		//	tones.add(i);
+		for(int i = 0; i<song2.length ; i++)
+			tones.add(song2[i]);
 	}
 
 	public int getTone(int i)
