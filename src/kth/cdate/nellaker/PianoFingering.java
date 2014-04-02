@@ -48,8 +48,8 @@ public class PianoFingering {
 			return;
 		}*/
 		
-		//Song song = new Song(new File("test.mid")); 
-		Song song = new Song(); // Create a default scale
+		Song song = new Song(new File("Divenire.mid")); 
+		//Song song = new Song(); // Create a default scale
 		System.out.println("Song: "+song.toString());
 		FingerTree ft = new FingerTree();
 		long start = System.currentTimeMillis();

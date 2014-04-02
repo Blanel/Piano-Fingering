@@ -42,7 +42,8 @@ public class NoteNode {
 			{
 				NoteNode temp = new NoteNode(songIndex+1, nextFinger, i, this, song);
 				temp.generateValue();
-				queue.add(temp);
+				if(temp.getCurrentScore()<FingerTree.MAX_SCORE)
+					queue.add(temp);
 			}
 		}
 	}

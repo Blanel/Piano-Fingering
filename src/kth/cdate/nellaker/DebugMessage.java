@@ -1,7 +1,7 @@
 package kth.cdate.nellaker;
 
 public class DebugMessage {
-	private static boolean DEBUG_ON= true;
+	private static boolean DEBUG_ON= false;
 	public static void msg(String msg)
 	{
 		if(DEBUG_ON)

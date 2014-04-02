@@ -12,6 +12,7 @@ public class FingerTree {
 	private ArrayList<NoteNode> root;
 	private NoteNode best;
 	private ArrayList<NoteNode> allBest;
+	public static final int MAX_SCORE = 1000;
 	
 	Comparator<NoteNode> comp = new Comparator<NoteNode>(){
 		public int compare(NoteNode one, NoteNode two){
@@ -47,10 +48,11 @@ public class FingerTree {
 			queue.add(root.get(i));
 		}
 		// Sort the queue
-		
-		while(!queue.isEmpty() && queue.get(0).getCurrentScore()<=bestPath+offset)
+		int iterations_done = 0;
+		while(!queue.isEmpty() && queue.get(0).getCurrentScore()<bestPath+offset)
 		{
 			
+			//System.err.println(bestPath + " " +queue.get(0).getIndex()+" "+highestIndex+" "+queue.get(0).getCurrentScore() + " "+iterations--+" - "+iterations_done++);
 			//DebugMessage.msg(bestPath + " " +queue.get(0).getIndex()+" "+highestIndex+" "+queue.get(0).getCurrentScore() + " "+iterations--);
 			NoteNode current = queue.remove(0);
 			if(current.getIndex()== s.getLength()-1  && current.getCurrentScore()<=bestPath+offset)
