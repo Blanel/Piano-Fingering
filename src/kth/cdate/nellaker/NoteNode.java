@@ -62,6 +62,11 @@ public class NoteNode {
 	{
 		return finger;
 	}
+	
+	public int getNextFinger()
+	{
+		return nextFinger;
+	}
 
 	public int getIndex()
 	{
@@ -138,6 +143,8 @@ public class NoteNode {
 			sb.append("]");
 			return sb.toString();
 		}
+		
+
 	}
 	
 }

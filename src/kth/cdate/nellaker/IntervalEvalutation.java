@@ -44,7 +44,7 @@ public class IntervalEvalutation {
 			DebugMessage.msg("\tRule 6 triggered");
 			rulesTriggered[5]=true;
 		}
-			 
+
 
 
 		// Run rules that are dependant on 1 past node in history
@@ -58,10 +58,10 @@ public class IntervalEvalutation {
 			fIndex = getFIndex(finger1, finger2);
 
 			int interval = (song.getTone(nn.getIndex())-song.getTone(nn.getParent().getIndex()));
-			
+
 			if(nn.getFinger() < nn.getParent().getFinger())
 				interval *= -1;
-			
+
 			// Check if the same finger is used twice
 			if(fIndex == -1 && song.getTone(nn.getParent().getIndex())==song.getTone(nn.getIndex()))
 			{
@@ -170,19 +170,19 @@ public class IntervalEvalutation {
 			 */
 			if(
 					(
-					nn.getFinger() == 3 && 
-					nn.getParent().getFinger()==4 && 
-					Song.isBlack(song.getTone(nn.getParent().getIndex())) && 
-					!Song.isBlack(song.getTone(nn.getIndex()))
-					) 
-					|| 
-					(
-					nn.getFinger() == 4 && 
-					nn.getParent().getFinger()==3 && 
-					!Song.isBlack(song.getTone(nn.getParent().getIndex())) && 
-					Song.isBlack(song.getTone(nn.getIndex()))
+							nn.getFinger() == 3 && 
+							nn.getParent().getFinger()==4 && 
+							Song.isBlack(song.getTone(nn.getParent().getIndex())) && 
+							!Song.isBlack(song.getTone(nn.getIndex()))
+							) 
+							|| 
+							(
+									nn.getFinger() == 4 && 
+									nn.getParent().getFinger()==3 && 
+									!Song.isBlack(song.getTone(nn.getParent().getIndex())) && 
+									Song.isBlack(song.getTone(nn.getIndex()))
+									)
 					)
-				)
 			{
 				DebugMessage.msg("\tRule 9 triggered");
 				rulesTriggered[8]=true;
@@ -203,12 +203,12 @@ public class IntervalEvalutation {
 					(		
 							song.getTone(nn.getIndex())<song.getTone(nn.getParent().getIndex()) && 
 							nn.getParent().getFinger()==1
-					) || 
-					(
-							song.getTone(nn.getIndex())>song.getTone(nn.getParent().getIndex()) && 
-							nn.getFinger()==1
+							) || 
+							(
+									song.getTone(nn.getIndex())>song.getTone(nn.getParent().getIndex()) && 
+									nn.getFinger()==1
+									)
 					)
-				)
 			{
 				if(Song.isBlack(song.getTone(nn.getIndex())) == Song.isBlack(song.getTone(nn.getParent().getIndex())))
 				{
@@ -238,7 +238,7 @@ public class IntervalEvalutation {
 					}
 				}
 			}
-			
+
 
 			// Run rules dependant on future node in history
 			if(nn.getIndex()+1<song.getLength())
@@ -262,76 +262,88 @@ public class IntervalEvalutation {
 				 * 
 				 * Needs 2 past node
 				 */
-				
-				int interval2 = song.getTone(nn.getIndex()) - song.getTone(nn.getParent().getParent().getIndex());
-				if(nn.getFinger() > nn.getParent().getParent().getFinger())
+
+				int interval2 = song.getTone(nn.getIndex()+1) - song.getTone(nn.getIndex()-1);
+				if(nn.getNextFinger() < nn.getParent().getFinger())
 					interval2 *= -1;
-				int fIndex2 = (getFIndex(nn.getFinger(), nn.getParent().getParent().getFinger()));
-				
+				int fIndex2 = (getFIndex(nn.getNextFinger(), nn.getParent().getFinger()));
+
 				if(fIndex2 == -1)
 				{
-					DebugMessage.msg("\tDafuq...?");
-					return 30000;
+					score+=interval;
 				}
-
-				if((interval2 > maxComf[fIndex2])||(interval2 < minComf[fIndex2]))
+				if(fIndex2 != -1)
 				{
-					if(nn.getParent().getFinger() == 1 && ((song.getTone(nn.getIndex()) < song.getTone(nn.getParent().getIndex()) && song.getTone(nn.getParent().getIndex()) < song.getTone(nn.getParent().getParent().getIndex())) || (song.getTone(nn.getIndex()) > song.getTone(nn.getParent().getIndex()) && song.getTone(nn.getParent().getIndex()) > song.getTone(nn.getParent().getParent().getIndex()))) && (interval2 > maxPrac[fIndex2])||(interval2 < minPrac[fIndex2]))
+					
+					
+					if((interval2 > maxComf[fIndex2])||(interval2 < minComf[fIndex2]))
 					{
-						DebugMessage.msg("\tRule 4 triggered");
-						rulesTriggered[3]=true;
-						score +=2;
+						boolean fullChange = false;
+						if(nn.getFinger() == 1)
+						{
+							if((song.getTone(nn.getIndex())<song.getTone(nn.getIndex()-1) && song.getTone(nn.getIndex())>song.getTone(nn.getIndex()+1)) || (song.getTone(nn.getIndex())<song.getTone(nn.getIndex()+1) && song.getTone(nn.getIndex())>song.getTone(nn.getIndex()-1)))
+							{
+								if(interval2 > maxPrac[fIndex2] || interval2 < minComf[fIndex2])
+								{
+									fullChange = true;
+									DebugMessage.msg("\tRule 4 triggered (Full change)");
+									rulesTriggered[3]=true;
+									score +=2;
+								}
+							}
+								
+						}
+						if(!fullChange)
+						{
+							DebugMessage.msg("\tRule 4 triggered");
+							rulesTriggered[3]=true;
+							score +=1;
+						}
 					}
-					else
+
+
+					/*
+					 * 5. Position-Change-Size Rule: If the interval
+					 * spanned by the first and third notes in a group
+					 * of three is less than MinComf, assign the
+					 * difference between the interval and MinComf
+					 * (expressed in semitones). Conversely, if the 
+					 * interval is greater than MaxComf, assign the
+					 * difference between the interval and MaxComf
+					 * 
+					 * Needs 2 past node
+					 */
+					if(interval2<minComf[fIndex2])
 					{
-						DebugMessage.msg("\tRule 4 triggered");
-						rulesTriggered[3]=true;
-						score +=1;
+						DebugMessage.msg("\tRule 5_ triggered");
+						rulesTriggered[4]=true;
+						score += minComf[fIndex2]-interval2;
 					}
-				}
-
-
-				/*
-				 * 5. Position-Change-Size Rule: If the interval
-				 * spanned by the first and third notes in a group
-				 * of three is less than MinComf, assign the
-				 * difference between the interval and MinComf
-				 * (expressed in semitones). Conversely, if the 
-				 * interval is greater than MaxComf, assign the
-				 * difference between the interval and MaxComf
-				 * 
-				 * Needs 2 past node
-				 */
-				if(interval2<minComf[fIndex2])
-				{
-					DebugMessage.msg("\tRule 5 triggered");
-					rulesTriggered[4]=true;
-					score += minComf[fIndex2]-interval2;
-				}
-				else if(interval2>maxComf[fIndex2])
-				{
-					DebugMessage.msg("\tRule 5 triggered");
-					rulesTriggered[4]=true;
-					score += interval2-maxComf[fIndex2];
-				}
+					else if(interval2>maxComf[fIndex2])
+					{
+						DebugMessage.msg("\tRule 5 triggered");
+						rulesTriggered[4]=true;
+						score += interval2-maxComf[fIndex2];
+					}
 
 
 
-				/*
-				 * 7. Three-Four-Five Rule: Assign 1 point every
-				 * time fingers 3,4, and 5 occur consecutively in
-				 * any order, even when groups overlap.
-				 * 
-				 * Needs 2 past node
-				 */
-				if(nn.getFinger() != nn.getParent().getFinger() && nn.getParent().getParent().getFinger() != nn.getParent().getFinger() && nn.getParent().getParent().getFinger() != nn.getFinger() && nn.getFinger()>=3 && nn.getParent().getFinger()>=3 && nn.getParent().getParent().getFinger()>=3)
-				{
-					DebugMessage.msg("\tRule 7 triggered");
-					rulesTriggered[6]=true;
-					score+=1;
+					/*
+					 * 7. Three-Four-Five Rule: Assign 1 point every
+					 * time fingers 3,4, and 5 occur consecutively in
+					 * any order, even when groups overlap.
+					 * 
+					 * Needs 2 past node
+					 */
+					if(nn.getNextFinger() != nn.getFinger() && nn.getParent().getFinger() != nn.getFinger() && nn.getParent().getFinger() != nn.getNextFinger() && nn.getNextFinger()>=3 && nn.getFinger()>=3 && nn.getParent().getFinger()>=3)
+					{
+						DebugMessage.msg("\tRule 7 triggered");
+						rulesTriggered[6]=true;
+						score+=1;
+					}
 				}
 			}
-			
+
 			// Special rules
 			/*
 			 * 10. Thumb-on-Black Rule: Assign 1 point whenever
@@ -377,7 +389,7 @@ public class IntervalEvalutation {
 					rulesTriggered[10]=true;
 					score +=2;
 				}
-				
+
 			}
 		}
 
@@ -430,4 +442,5 @@ public class IntervalEvalutation {
 		}
 		return fIndex;
 	}
+	
 }
