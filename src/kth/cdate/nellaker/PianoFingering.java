@@ -11,13 +11,16 @@ public class PianoFingering {
 	private static final String usage = "Usage: java PianoFingering <midi_file> <options>\n"
 			+ "Valid options:\n"
 			+ "-s N\n"
-			+ "\t Run the program from starting index N (inclusive). Can be from 0 up to song length. (Default: 0)\n"
+			+ "  Run the program from starting index N (inclusive). Can be from 0 up to song length. (Default: 0)\n"
 			+ "-e N\n"
-			+ "\t Run the program to ending index N (non-inclusive). Can be from 1 up to song length. (Default: Song_Length)"
+			+ "  Run the program to ending index N (non-inclusive). Can be from 1 up to song length. (Default: Song_Length)\n"
 			+ "-m N\n"
-			+ "\t Set a max score allowed for nodes. Is useful if running out of heap is an issue. (Default: 1500"; 
+			+ "  Set a max score allowed for nodes. Is useful if running out of heap is an issue. (Default: 1500)\n"; 
 	public static void main(String[] args)
 	{
+		/*
+		 * Run startup and check for arguments
+		 */
 		File midiFile = null;
 		int startIndex = 0;
 		int endIndex = Integer.MAX_VALUE;
@@ -63,17 +66,9 @@ public class PianoFingering {
 			return;
 		}
 		
-		
-		//Song song = new Song(new File("Divenire.mid")); 
-		
-		/*InputStreamReader ir = new InputStreamReader(System.in);
-		BufferedReader br = new BufferedReader(ir);
-		try {
-			br.readLine();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
+		/*
+		 * Initialize all variables that have not been set already
+		 */
 		//Song song = new Song(); // Create a default scale
 		Song song = new Song(midiFile);
 		FingerTree.end_index = endIndex;
@@ -81,17 +76,19 @@ public class PianoFingering {
 		FingerTree.max_score = maxScore;
 		if(FingerTree.end_index==Integer.MAX_VALUE)
 			FingerTree.end_index = song.getLength();
+		
 		System.out.println("Song: "+song.toString());
 		FingerTree ft = new FingerTree();
 		long start = System.currentTimeMillis();
 		ft.generateTree(song, 0);
 		long delta = System.currentTimeMillis()-start;
 		System.err.println("\n\nTime to run: "+delta);
+		
+		
 		if(ft.getBest() != null)
 			System.err.println("Final Score: "+ft.getBest().getCurrentScore());
 		else
 			System.err.println("No path found, try lowering MAX_SCORE in FingerTree");
-		//String out = ft.getBestSequence();
 		String out = ft.getAllBest();
 		System.out.println(out);
 		

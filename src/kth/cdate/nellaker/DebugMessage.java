@@ -1,10 +1,10 @@
 package kth.cdate.nellaker;
 
 public class DebugMessage {
-	private static boolean DEBUG_ON= false;
-	public static void msg(String msg)
+	
+	public static void msg(String msg, boolean debugging_on)
 	{
-		if(DEBUG_ON)
+		if(debugging_on)
 			System.err.println("DEBUG ("+System.currentTimeMillis()+"): "+msg);
 	}
 

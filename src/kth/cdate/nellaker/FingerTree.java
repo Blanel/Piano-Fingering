@@ -12,6 +12,7 @@ public class FingerTree {
 	private ArrayList<NoteNode> root;
 	private NoteNode best;
 	private ArrayList<NoteNode> allBest;
+	private boolean debug=true;
 	
 	public int worstScore = 0;
 	public static int max_score = 1500;
@@ -88,8 +89,9 @@ public class FingerTree {
 			if(current.getIndex()>highestIndex)
 				highestIndex = current.getIndex();
 		}
+		System.out.println();
 		worstScore = queue.get(queue.size()-1).getCurrentScore();
-		DebugMessage.msg("Generation done!");
+		DebugMessage.msg("Generation done!",debug);
 	}
 	
 	public String getBestSequence()
@@ -101,7 +103,7 @@ public class FingerTree {
 		StringBuilder sb = new StringBuilder();
 		for(int i = 0 ; i<allBest.size() ; i++)
 		{
-			sb.append(allBest.get(i).toString()+"\n");
+			sb.append(allBest.get(i).toString()+"\n\n");
 		}
 		return sb.toString();
 	}
