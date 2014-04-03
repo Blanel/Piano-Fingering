@@ -30,6 +30,7 @@ public class NoteNode {
 		this.parent = parent;
 		this.song = song;
 		this.nextFinger = nextFinger;
+		rulesTriggered = new boolean[12];
 		generateValue();
 	}
 
@@ -95,6 +96,7 @@ public class NoteNode {
 	{
 		StringBuilder sb = new StringBuilder();
 		NoteNode current = this;
+		int lastScore = this.getCurrentScore();
 		LinkedList<FStringNode> fingering = new LinkedList<FStringNode>();
 		for(int i = 0 ; i<FingerTree.end_index-FingerTree.start_index ; i++)
 		{
@@ -106,6 +108,7 @@ public class NoteNode {
 		{
 			sb.append(it.next().toString()+"\n");
 		}
+		sb.append("Final Score: "+lastScore);
 		return sb.toString();
 	}
 	
