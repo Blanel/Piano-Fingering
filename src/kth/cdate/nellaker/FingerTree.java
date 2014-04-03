@@ -12,6 +12,8 @@ public class FingerTree {
 	private ArrayList<NoteNode> root;
 	private NoteNode best;
 	private ArrayList<NoteNode> allBest;
+	
+	public int worstScore = 0;
 	public static int max_score = 1500;
 	public static int start_index = 0;
 	public static int end_index = Integer.MAX_VALUE;
@@ -86,6 +88,7 @@ public class FingerTree {
 			if(current.getIndex()>highestIndex)
 				highestIndex = current.getIndex();
 		}
+		worstScore = queue.get(queue.size()-1).getCurrentScore();
 		DebugMessage.msg("Generation done!");
 	}
 	
