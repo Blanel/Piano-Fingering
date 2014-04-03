@@ -30,7 +30,7 @@ public class Song {
 
 	public Song()
 	{
-		int scaleLength = 16;
+		int scaleLength = 35;
 		tones = new ArrayList<Integer>();
 		for(int i = 0 ; i<scaleLength ; i++)
 			tones.add(i);
@@ -88,7 +88,7 @@ public class Song {
 	public String toString()
 	{
 		StringBuilder sb = new StringBuilder();
-		for(int i = 0 ; i < tones.size() ; i++)
+		for(int i = FingerTree.start_index ; i < FingerTree.end_index ; i++)
 		{
 			sb.append(Song.getNoteName(tones.get(i))+Song.getOctave(tones.get(i))+"  ");
 		}

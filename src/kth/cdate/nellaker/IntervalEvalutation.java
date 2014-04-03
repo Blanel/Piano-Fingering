@@ -48,7 +48,7 @@ public class IntervalEvalutation {
 
 
 		// Run rules that are dependant on 1 past node in history
-		if(nn.getIndex()>0)
+		if(nn.getIndex()>FingerTree.start_index)
 		{
 			int fIndex = -1;
 			int finger1 = nn.getParent().getFinger();
@@ -359,7 +359,7 @@ public class IntervalEvalutation {
 				DebugMessage.msg("\tRule 10 triggered");
 				rulesTriggered[9]=true;
 				score += 1;
-				if(nn.getIndex()>1 && !Song.isBlack(song.getTone(nn.getParent().getParent().getIndex())))
+				if(nn.getIndex()>FingerTree.start_index+1 && !Song.isBlack(song.getTone(nn.getParent().getParent().getIndex())))
 					score+=2;
 				if(!Song.isBlack(song.getTone(nn.getIndex())))
 					score+=2;
@@ -383,7 +383,7 @@ public class IntervalEvalutation {
 					rulesTriggered[10]=true;
 					score +=2;
 				}
-				if(nn.getIndex()>1 && !Song.isBlack(song.getTone(nn.getParent().getParent().getIndex())))
+				if(nn.getIndex()>FingerTree.start_index+1 && !Song.isBlack(song.getTone(nn.getParent().getParent().getIndex())))
 				{
 					DebugMessage.msg("\tRule 11 triggered");
 					rulesTriggered[10]=true;

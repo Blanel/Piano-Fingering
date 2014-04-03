@@ -42,7 +42,7 @@ public class NoteNode {
 			{
 				NoteNode temp = new NoteNode(songIndex+1, nextFinger, i, this, song);
 				temp.generateValue();
-				if(temp.getCurrentScore()<FingerTree.MAX_SCORE)
+				if(temp.getCurrentScore()<FingerTree.max_score)
 					queue.add(temp);
 			}
 		}
@@ -96,7 +96,7 @@ public class NoteNode {
 		StringBuilder sb = new StringBuilder();
 		NoteNode current = this;
 		LinkedList<FStringNode> fingering = new LinkedList<FStringNode>();
-		for(int i = 0 ; i<song.getLength() ; i++)
+		for(int i = 0 ; i<FingerTree.end_index-FingerTree.start_index ; i++)
 		{
 			fingering.addFirst(new FStringNode(current));
 			current = current.parent;
