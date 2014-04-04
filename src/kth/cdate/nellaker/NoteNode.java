@@ -135,7 +135,7 @@ public class NoteNode {
 		public String toString()
 		{
 			StringBuilder sb = new StringBuilder();
-			sb.append(finger+" "+note+" "+score+" [");
+			sb.append(finger+"\t"+note+"\t"+score+"\t[");
 			
 			for(int i = 0 ; i<11 ; i++)
 			{
