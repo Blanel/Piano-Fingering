@@ -356,14 +356,14 @@ public class IntervalEvalutation {
 			 * 
 			 * Needs 1 past node or 2 past nodes
 			 */
-			if(nn.getParent().getFinger()== 1 && Song.isBlack(song.getTone(nn.getParent().getIndex())))
+			if(nn.getFinger()== 1 && Song.isBlack(song.getTone(nn.getIndex())))
 			{
 				DebugMessage.msg(("\tRule 10 triggered"), debug);
 				rulesTriggered[9]=true;
 				score += 1;
-				if(nn.getIndex()>FingerTree.start_index+1 && !Song.isBlack(song.getTone(nn.getParent().getParent().getIndex())))
+				if(nn.getIndex() > FingerTree.start_index && !Song.isBlack(nn.getIndex()-1))
 					score+=2;
-				if(!Song.isBlack(song.getTone(nn.getIndex())))
+				if(nn.getIndex() < FingerTree.end_index && !Song.isBlack(song.getTone(nn.getIndex()+1)))
 					score+=2;
 			}
 
