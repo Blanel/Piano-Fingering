@@ -90,7 +90,7 @@ public class FingerTree {
 				highestIndex = current.getIndex();
 		}
 		System.out.println();
-		worstScore = queue.get(queue.size()-1).getCurrentScore();
+		//worstScore = queue.get(queue.size()-1).getCurrentScore();
 		DebugMessage.msg("Generation done!",debug);
 	}
 	

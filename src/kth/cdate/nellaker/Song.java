@@ -50,9 +50,11 @@ public class Song {
 
 	public static String getNoteName(int i)
 	{
+		if(i<0)
+			return "Paus";
 		return NOTE_NAMES[i % 12];
 	}
-	
+
 	public static boolean isBlack(int i)
 	{
 		int num = i % 12;
@@ -69,6 +71,7 @@ public class Song {
 	public ArrayList<Integer> parseMidi(File midi) throws Exception {
 		Sequence sequence = MidiSystem.getSequence(midi);
 		ArrayList<Integer> notes = new ArrayList<Integer>();
+		long noteOffTime = Long.MAX_VALUE;
 		for (Track track :  sequence.getTracks()) {
 			for (int i=0; i < track.size(); i++) { 
 				MidiEvent event = track.get(i);
@@ -76,9 +79,20 @@ public class Song {
 				if (message instanceof ShortMessage) {
 					ShortMessage sm = (ShortMessage) message;
 					if (sm.getCommand() == NOTE_ON && sm.getData2()>0) { // Check so it is a hit and that it has velocity
-
+						if(noteOffTime+2 < event.getTick())
+						{
+							//System.out.println("Paus added");
+							notes.add(-1);
+						}
+						//System.out.println("Note added");
 						notes.add(sm.getData1()); // Adds the note to the list
 					} 
+					//System.out.println(sm.getCommand());
+					if (sm.getData2()==0)
+					{
+						noteOffTime = event.getTick();
+						
+					}
 				} 
 			}         
 		}

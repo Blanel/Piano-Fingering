@@ -34,13 +34,16 @@ public class IntervalEvalutation {
 		DebugMessage.msg(("NEW NODE"), debug);
 		int score = 0;
 
+		
+		
 		/*
 		 * 6. Weak-Finger Rule: Assign 1 point every time
 		 * finger 4 or finger 5 is used.
 		 * 
 		 * Needs 0 past node
 		 */
-		if(nn.getFinger()>=4)
+		
+		if(nn.getFinger()>=4 && song.getTone(nn.getIndex())>=0)
 		{
 			score += 1;
 			DebugMessage.msg(("\tRule 6 triggered"), debug);
@@ -50,7 +53,7 @@ public class IntervalEvalutation {
 
 
 		// Run rules that are dependant on 1 past node in history
-		if(nn.getIndex()>FingerTree.start_index)
+		if(nn.getIndex()>FingerTree.start_index && song.getTone(nn.getIndex())>=0 && song.getTone(nn.getIndex()-1)>=0)
 		{
 			int fIndex = -1;
 			int finger1 = nn.getParent().getFinger();
@@ -243,7 +246,7 @@ public class IntervalEvalutation {
 
 
 			// Run rules dependant on future node in history
-			if(nn.getIndex()+1<song.getLength())
+			if(nn.getIndex()+1<song.getLength() && song.getTone(nn.getIndex())>=0 && song.getTone(nn.getIndex()-1)>=0 && song.getTone(nn.getIndex()+1)>=0)
 			{
 
 				/*
