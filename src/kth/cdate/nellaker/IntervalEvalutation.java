@@ -377,15 +377,15 @@ public class IntervalEvalutation {
 			 * 
 			 * Needs 1 past node or 2 past nodes
 			 */
-			if(nn.getParent().getFinger()== 5 && Song.isBlack(song.getTone(nn.getParent().getIndex())))
+			if(nn.getFinger()== 5 && Song.isBlack(song.getTone(nn.getIndex())))
 			{
-				if(!Song.isBlack(song.getTone(nn.getIndex())))
+				if(nn.getIndex() > FingerTree.start_index && !Song.isBlack(song.getTone(nn.getIndex()-1)))
 				{
 					DebugMessage.msg(("\tRule 11 triggered"), debug);
 					rulesTriggered[10]=true;
 					score +=2;
 				}
-				if(nn.getIndex()>FingerTree.start_index+1 && !Song.isBlack(song.getTone(nn.getParent().getParent().getIndex())))
+				if(nn.getIndex() < FingerTree.end_index && !Song.isBlack(song.getTone(nn.getIndex()+1)))
 				{
 					DebugMessage.msg(("\tRule 11 triggered"), debug);
 					rulesTriggered[10]=true;
