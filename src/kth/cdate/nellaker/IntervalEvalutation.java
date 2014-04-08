@@ -416,6 +416,15 @@ public class IntervalEvalutation {
 			}
 
 		}
+		
+		/*
+		 * XX. The pause rule.
+		 * This rule is under development
+		 */
+		if(song.getTone(nn.getIndex())<0)
+		{
+			
+		}
 
 		nn.setRules(rulesTriggered);
 

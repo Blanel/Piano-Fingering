@@ -18,6 +18,7 @@ public class Song {
 	private static final String[] NOTE_NAMES = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
 	private static final int[] song = {0,2,4,5,7,9,11};
 	private static final int[] song2 = {69,60,69,76};
+	private static final boolean debug = false;
 	public Song(File midi)
 	{
 		try {
@@ -82,8 +83,18 @@ public class Song {
 					if (sm.getCommand() == NOTE_ON && sm.getData2()>0) { // Check so it is a hit and that it has velocity
 						if(!firstNote && noteOffTime+2 < event.getTick())
 						{
-							//System.out.println("Paus added");
-							notes.add(-1);
+							/*
+							 * Paus lengths:
+							 * whole-note: 			1921 ticks
+							 * half-note: 			961 ticks
+							 * quarter-note: 		481 ticks
+							 * eighth-note: 		241 ticks
+							 * sixteenth-note: 		121 ticks
+							 * thirty-second-note: 	61 ticks
+							 * sixty-fourth-note: 	31 ticks 
+							 */
+							notes.add((int)(noteOffTime-event.getTick()));
+							DebugMessage.msg("Paus: "+(event.getTick()-noteOffTime),debug);
 						}
 						//System.out.println("Note added");
 						notes.add(sm.getData1()); // Adds the note to the list
