@@ -13,19 +13,19 @@ public class FingerTree {
 	private NoteNode best;
 	private ArrayList<NoteNode> allBest;
 	private boolean debug=true;
-	
+
 	public int worstScore = 0;
 	public static int max_score = 1500;
 	public static int start_index = 0;
 	public static int end_index = Integer.MAX_VALUE;
 	public static int PRUNED = 0;
-	
+
 	Comparator<NoteNode> comp = new Comparator<NoteNode>(){
 		public int compare(NoteNode one, NoteNode two){
 			return one.getCurrentScore() - two.getCurrentScore();
 		}
 	}; 
-	
+
 	public void generateTree(Song s, int offset)
 	{
 		long iterations = Math.round(Math.pow(5, s.getLength()));
@@ -38,16 +38,31 @@ public class FingerTree {
 		// Initialize the queue for each finger
 		for(int i = 1 ; i<=5 ; i++)
 		{
-			// Add node to root list
-			for(int j = 1 ; j<=5 ; j++)
+			if(s.getTone(start_index+1)<0)
 			{
-				NoteNode temp = new NoteNode(start_index, i, j, null, s);
+				NoteNode temp = new NoteNode(start_index, i, -1, null, s);
 				temp.generateValue();
 				root.add(temp);
-				
+			}
+			else if(s.getTone(start_index)<0)
+			{
+				NoteNode temp = new NoteNode(start_index, -1, i, null, s);
+				temp.generateValue();
+				root.add(temp);
+			}
+			else
+			{
+				// Add node to root list
+				for(int j = 1 ; j<=5 ; j++)
+				{
+					NoteNode temp = new NoteNode(start_index, i, j, null, s);
+					temp.generateValue();
+					root.add(temp);
+
+				}
 			}
 		}
-		
+
 		// Queue all nodes in root
 		for(int i = 0 ; i<root.size() ; i++)
 		{
@@ -67,12 +82,12 @@ public class FingerTree {
 		{
 			iterations_done++;
 
-				//System.err.println(queue.get(0).getIndex()+" "+highestIndex+" "+queue.get(0).getCurrentScore() + " "+iterations_done++);
-				if((float)highestIndex/(float)end_index>loadingBar-(float)1/(float)loadingBarLength)
-				{
-					loadingBar += (float)1/(float)loadingBarLength; 
-					System.out.print("#");
-				}
+			//System.err.println(queue.get(0).getIndex()+" "+highestIndex+" "+queue.get(0).getCurrentScore() + " "+iterations_done++);
+			if((float)highestIndex/(float)end_index>loadingBar-(float)1/(float)loadingBarLength)
+			{
+				loadingBar += (float)1/(float)loadingBarLength; 
+				System.out.print("#");
+			}
 			//DebugMessage.msg(bestPath + " " +queue.get(0).getIndex()+" "+highestIndex+" "+queue.get(0).getCurrentScore() + " "+iterations--);
 			NoteNode current = queue.remove(0);
 			if(current.getIndex()== end_index-1  && current.getCurrentScore()<=bestPath+offset)
@@ -83,7 +98,7 @@ public class FingerTree {
 			}
 			else
 			{
-			// Generate children and add to queue
+				// Generate children and add to queue
 				current.generateChildren(queue);
 			}
 			if(current.getIndex()>highestIndex)
@@ -93,7 +108,7 @@ public class FingerTree {
 		//worstScore = queue.get(queue.size()-1).getCurrentScore();
 		DebugMessage.msg("Generation done!",debug);
 	}
-	
+
 	public String getBestSequence()
 	{
 		return best.toString();

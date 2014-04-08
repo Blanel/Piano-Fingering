@@ -248,7 +248,7 @@ public class IntervalEvalutation {
 				{
 					score+=interval;
 				}
-				if(fIndex2 != -1)
+				if(fIndex2 != -1) // TODO Check if this is correct, feels fishy!
 				{
 
 
@@ -416,14 +416,33 @@ public class IntervalEvalutation {
 			}
 
 		}
-		
 		/*
 		 * XX. The pause rule.
 		 * This rule is under development
 		 */
-		if(song.getTone(nn.getIndex())<0)
+		if(nn.getIndex()-1>=FingerTree.start_index && nn.getIndex()+1<=FingerTree.end_index)
 		{
-			
+			int interval2 = song.getTone(nn.getIndex()+1) - song.getTone(nn.getIndex()-1);
+			if(nn.getNextFinger() < nn.getParent().getFinger())
+				interval2 *= -1;
+			int fIndex2 = (getFIndex(nn.getNextFinger(), nn.getParent().getFinger()));
+			if(song.getTone(nn.getIndex())<0)
+			{
+				if(fIndex2 == -1)
+				{
+					if(interval2!=0)
+					{
+						score++;
+					}
+				}
+				else
+				{
+					if(interval2>maxRel[fIndex2])
+						score++;
+					if(interval2<minRel[fIndex2])
+						score++;
+				}
+			}
 		}
 
 		nn.setRules(rulesTriggered);
