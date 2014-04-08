@@ -174,7 +174,7 @@ public class IntervalEvalutation {
 					nn.getParent().getFinger()==3 && nn.getFinger() == 4 && !Song.isBlack(song.getTone(nn.getIndex()-1)) && Song.isBlack(song.getTone(nn.getIndex()))
 					||
 					nn.getParent().getFinger()==4 && nn.getFinger() == 3 && Song.isBlack(song.getTone(nn.getIndex()-1)) && !Song.isBlack(song.getTone(nn.getIndex()))
-					) {
+				) {
 				DebugMessage.msg(("\tRule 9 triggered"), debug);
 				rulesTriggered[8]=true;
 				score += 1;
