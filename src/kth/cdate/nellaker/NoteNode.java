@@ -14,7 +14,7 @@ public class NoteNode {
 
 	private int finger;
 
-	
+
 	private NoteNode parent;
 	private int nextFinger;
 	//private ArrayList<NoteNode> children;
@@ -37,14 +37,24 @@ public class NoteNode {
 
 	public void generateChildren(SortedList<NoteNode> queue)
 	{
-		if(songIndex+1 < song.getLength())
+		if(songIndex+1 < FingerTree.end_index)
 		{
-			for(int i = 1 ; i<=5 ; i++)
+			if(songIndex+2 < FingerTree.end_index && song.getTone(songIndex+2)<0)
 			{
-				NoteNode temp = new NoteNode(songIndex+1, nextFinger, i, this, song);
+				NoteNode temp = new NoteNode(songIndex+1, nextFinger, -1, this, song);
 				temp.generateValue();
 				if(temp.getCurrentScore()<FingerTree.max_score)
 					queue.add(temp);
+			}
+			else
+			{
+				for(int i = 1 ; i<=5 ; i++)
+				{
+					NoteNode temp = new NoteNode(songIndex+1, nextFinger, i, this, song);
+					temp.generateValue();
+					if(temp.getCurrentScore()<FingerTree.max_score)
+						queue.add(temp);
+				}
 			}
 		}
 	}
@@ -57,14 +67,14 @@ public class NoteNode {
 			currentScore = parent.getCurrentScore();
 		localScore = IntervalEvalutation.getScore(this, song);
 		currentScore += localScore;
-		
+
 	}
 
 	public int getFinger()
 	{
 		return finger;
 	}
-	
+
 	public int getNextFinger()
 	{
 		return nextFinger;
@@ -79,19 +89,19 @@ public class NoteNode {
 	{
 		return parent;
 	}
-	
 
-	
+
+
 	public int getCurrentScore()
 	{
 		return currentScore;
 	}
-	
+
 	public int getLocalScore()
 	{
 		return localScore;
 	}
-	
+
 	public String toString()
 	{
 		StringBuilder sb = new StringBuilder();
@@ -111,19 +121,19 @@ public class NoteNode {
 		sb.append("Final Score: "+lastScore);
 		return sb.toString();
 	}
-	
+
 	public void setRules(boolean[] rulesTriggered)
 	{
 		this.rulesTriggered = rulesTriggered;
 	}
-	
+
 	private class FStringNode
 	{
 		int finger;
 		String note;
 		int score;
 		boolean[] rulesTriggered;
-		
+
 		public FStringNode(NoteNode nn)
 		{
 			this.finger = nn.finger;
@@ -131,12 +141,12 @@ public class NoteNode {
 			this.rulesTriggered = nn.rulesTriggered;
 			note = Song.getNoteName(song.getTone(nn.getIndex()))+Song.getOctave(song.getTone(nn.getIndex()));
 		}
-		
+
 		public String toString()
 		{
 			StringBuilder sb = new StringBuilder();
 			sb.append(finger+"\t"+note+"\t"+score+"\t[");
-			
+
 			for(int i = 0 ; i<11 ; i++)
 			{
 				if(rulesTriggered[i])
@@ -147,8 +157,8 @@ public class NoteNode {
 			sb.append("]");
 			return sb.toString();
 		}
-		
+
 
 	}
-	
+
 }

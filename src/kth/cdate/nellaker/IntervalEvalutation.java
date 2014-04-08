@@ -34,16 +34,16 @@ public class IntervalEvalutation {
 		DebugMessage.msg(("NEW NODE"), debug);
 		int score = 0;
 
-		
-		
+
+
 		/*
 		 * 6. Weak-Finger Rule: Assign 1 point every time
 		 * finger 4 or finger 5 is used.
 		 * 
 		 * Needs 0 past node
 		 */
-		
-		if(nn.getFinger()>=4 && song.getTone(nn.getIndex())>=0)
+
+		if(song.getTone(nn.getIndex())>-1 && nn.getFinger()>=4 && song.getTone(nn.getIndex())>=0)
 		{
 			score += 1;
 			DebugMessage.msg(("\tRule 6 triggered"), debug);
@@ -53,7 +53,7 @@ public class IntervalEvalutation {
 
 
 		// Run rules that are dependant on 1 past node in history
-		if(nn.getIndex()>FingerTree.start_index && song.getTone(nn.getIndex())>=0 && song.getTone(nn.getIndex()-1)>=0)
+		if(nn.getIndex()>FingerTree.start_index && song.getTone(nn.getIndex())>-1 && song.getTone(nn.getIndex()-1)>-1)
 		{
 			int fIndex = -1;
 			int finger1 = nn.getParent().getFinger();
@@ -177,7 +177,7 @@ public class IntervalEvalutation {
 					nn.getParent().getFinger()==3 && nn.getFinger() == 4 && !Song.isBlack(song.getTone(nn.getIndex()-1)) && Song.isBlack(song.getTone(nn.getIndex()))
 					||
 					nn.getParent().getFinger()==4 && nn.getFinger() == 3 && Song.isBlack(song.getTone(nn.getIndex()-1)) && !Song.isBlack(song.getTone(nn.getIndex()))
-				) {
+					) {
 				DebugMessage.msg(("\tRule 9 triggered"), debug);
 				rulesTriggered[8]=true;
 				score += 1;
@@ -217,7 +217,7 @@ public class IntervalEvalutation {
 
 
 			// Run rules dependant on future node in history
-			if(nn.getIndex()+1<song.getLength() && song.getTone(nn.getIndex())>=0 && song.getTone(nn.getIndex()-1)>=0 && song.getTone(nn.getIndex()+1)>=0)
+			if(nn.getIndex()+1<FingerTree.end_index && song.getTone(nn.getIndex())>-1 && song.getTone(nn.getIndex()-1)>-1 && song.getTone(nn.getIndex()+1)>-1)
 			{
 
 				/*
@@ -320,53 +320,101 @@ public class IntervalEvalutation {
 				}
 			}
 
-			// Special rules
-			/*
-			 * 10. Thumb-on-Black Rule: Assign 1 point whenever
-			 * the thumb plays a black key. If the immediately
-			 * preceding note is white, assign a further 2
-			 * points. If the immediately following note is
-			 * white, assign a further 2 points.
-			 * 
-			 * Needs 1 past node or 2 past nodes
-			 */
-			if(nn.getFinger()== 1 && Song.isBlack(song.getTone(nn.getIndex())))
+
+		}
+		// Special rules
+		/*
+		 * 10. Thumb-on-Black Rule: Assign 1 point whenever
+		 * the thumb plays a black key. If the immediately
+		 * preceding note is white, assign a further 2
+		 * points. If the immediately following note is
+		 * white, assign a further 2 points.
+		 * 
+		 * Needs 1 past node or 2 past nodes
+		 */
+		if(song.getTone(nn.getIndex())>-1 && nn.getFinger()== 1 && Song.isBlack(song.getTone(nn.getIndex())))
+		{
+			DebugMessage.msg(("\tRule 10 triggered"), debug);
+			rulesTriggered[9]=true;
+			score += 1;
+			if(song.getTone(nn.getIndex()-1)>-1 && nn.getIndex() > FingerTree.start_index && !Song.isBlack(nn.getIndex()-1))
+				score+=2;
+			if(song.getTone(nn.getIndex()+1)>01 && nn.getIndex() < FingerTree.end_index && !Song.isBlack(song.getTone(nn.getIndex()+1)))
+				score+=2;
+		}
+
+		/*
+		 * 11. Five-on-Black Rule: If the fifth finger plays
+		 * a black key and the immediately preceding and 
+		 * following notes are also black, assign 0 points. If
+		 * the immediately preceding note is white, assign 2
+		 * points. If the immediately following key is white,
+		 * assign 2 further points.
+		 * 
+		 * Needs 1 past node or 2 past nodes
+		 */
+		if(song.getTone(nn.getIndex())>-1 && nn.getFinger()== 5 && Song.isBlack(song.getTone(nn.getIndex())))
+		{
+			if(nn.getIndex() > FingerTree.start_index && song.getTone(nn.getIndex()-1)>-1 && !Song.isBlack(song.getTone(nn.getIndex()-1)))
 			{
-				DebugMessage.msg(("\tRule 10 triggered"), debug);
-				rulesTriggered[9]=true;
-				score += 1;
-				if(nn.getIndex() > FingerTree.start_index && !Song.isBlack(nn.getIndex()-1))
-					score+=2;
-				if(nn.getIndex() < FingerTree.end_index && !Song.isBlack(song.getTone(nn.getIndex()+1)))
-					score+=2;
+				DebugMessage.msg(("\tRule 11 triggered"), debug);
+				rulesTriggered[10]=true;
+				score +=2;
+			}
+			if(nn.getIndex() < FingerTree.end_index && song.getTone(nn.getIndex()+1)>-1 && !Song.isBlack(song.getTone(nn.getIndex()+1)))
+			{
+				DebugMessage.msg(("\tRule 11 triggered"), debug);
+				rulesTriggered[10]=true;
+				score +=2;
 			}
 
-			/*
-			 * 11. Five-on-Black Rule: If the fifth finger plays
-			 * a black key and the immediately preceding and 
-			 * following notes are also black, assign 0 points. If
-			 * the immediately preceding note is white, assign 2
-			 * points. If the immediately following key is white,
-			 * assign 2 further points.
-			 * 
-			 * Needs 1 past node or 2 past nodes
-			 */
-			if(nn.getFinger()== 5 && Song.isBlack(song.getTone(nn.getIndex())))
-			{
-				if(nn.getIndex() > FingerTree.start_index && !Song.isBlack(song.getTone(nn.getIndex()-1)))
-				{
-					DebugMessage.msg(("\tRule 11 triggered"), debug);
-					rulesTriggered[10]=true;
-					score +=2;
-				}
-				if(nn.getIndex() < FingerTree.end_index && !Song.isBlack(song.getTone(nn.getIndex()+1)))
-				{
-					DebugMessage.msg(("\tRule 11 triggered"), debug);
-					rulesTriggered[10]=true;
-					score +=2;
-				}
+		}
+		// Special rules
+		/*
+		 * 10. Thumb-on-Black Rule: Assign 1 point whenever
+		 * the thumb plays a black key. If the immediately
+		 * preceding note is white, assign a further 2
+		 * points. If the immediately following note is
+		 * white, assign a further 2 points.
+		 * 
+		 * Needs 1 past node or 2 past nodes
+		 */
+		if(song.getTone(nn.getIndex())>-1 && nn.getFinger()== 1 && Song.isBlack(song.getTone(nn.getIndex())))
+		{
+			DebugMessage.msg(("\tRule 10 triggered"), debug);
+			rulesTriggered[9]=true;
+			score += 1;
+			if(song.getTone(nn.getIndex()-1)>-1 && nn.getIndex() > FingerTree.start_index && !Song.isBlack(nn.getIndex()-1))
+				score+=2;
+			if(song.getTone(nn.getIndex()+1)>01 && nn.getIndex() < FingerTree.end_index && !Song.isBlack(song.getTone(nn.getIndex()+1)))
+				score+=2;
+		}
 
+		/*
+		 * 11. Five-on-Black Rule: If the fifth finger plays
+		 * a black key and the immediately preceding and 
+		 * following notes are also black, assign 0 points. If
+		 * the immediately preceding note is white, assign 2
+		 * points. If the immediately following key is white,
+		 * assign 2 further points.
+		 * 
+		 * Needs 1 past node or 2 past nodes
+		 */
+		if(song.getTone(nn.getIndex())>-1 && nn.getFinger()== 5 && Song.isBlack(song.getTone(nn.getIndex())))
+		{
+			if(nn.getIndex() > FingerTree.start_index && song.getTone(nn.getIndex()-1)>-1 && !Song.isBlack(song.getTone(nn.getIndex()-1)))
+			{
+				DebugMessage.msg(("\tRule 11 triggered"), debug);
+				rulesTriggered[10]=true;
+				score +=2;
 			}
+			if(nn.getIndex() < FingerTree.end_index && song.getTone(nn.getIndex()+1)>-1 && !Song.isBlack(song.getTone(nn.getIndex()+1)))
+			{
+				DebugMessage.msg(("\tRule 11 triggered"), debug);
+				rulesTriggered[10]=true;
+				score +=2;
+			}
+
 		}
 
 		nn.setRules(rulesTriggered);

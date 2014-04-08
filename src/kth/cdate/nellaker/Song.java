@@ -72,6 +72,7 @@ public class Song {
 		Sequence sequence = MidiSystem.getSequence(midi);
 		ArrayList<Integer> notes = new ArrayList<Integer>();
 		long noteOffTime = Long.MAX_VALUE;
+		boolean firstNote = true;
 		for (Track track :  sequence.getTracks()) {
 			for (int i=0; i < track.size(); i++) { 
 				MidiEvent event = track.get(i);
@@ -79,13 +80,15 @@ public class Song {
 				if (message instanceof ShortMessage) {
 					ShortMessage sm = (ShortMessage) message;
 					if (sm.getCommand() == NOTE_ON && sm.getData2()>0) { // Check so it is a hit and that it has velocity
-						if(noteOffTime+2 < event.getTick())
+						if(!firstNote && noteOffTime+2 < event.getTick())
 						{
 							//System.out.println("Paus added");
 							notes.add(-1);
 						}
 						//System.out.println("Note added");
 						notes.add(sm.getData1()); // Adds the note to the list
+						if(firstNote)
+							firstNote = false;
 					} 
 					//System.out.println(sm.getCommand());
 					if (sm.getData2()==0)
