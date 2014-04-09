@@ -93,7 +93,7 @@ public class FingerTree {
 			if(current.getIndex()== end_index-1  && current.getCurrentScore()<=bestPath+offset)
 			{
 				NoteNode leaf = new NoteNode(current.getIndex()+1, current.getNextFinger(), -1, current, s);
-				leaf.generateValue();
+				//leaf.generateValue();
 				if(leaf.getCurrentScore()<=bestPath)
 				{
 					best = leaf;
