@@ -108,7 +108,7 @@ public class NoteNode {
 		NoteNode current = this;
 		int lastScore = this.getCurrentScore();
 		LinkedList<FStringNode> fingering = new LinkedList<FStringNode>();
-		for(int i = 0 ; i<FingerTree.end_index-FingerTree.start_index ; i++)
+		for(int i = 0 ; i<=FingerTree.end_index-FingerTree.start_index ; i++)
 		{
 			fingering.addFirst(new FStringNode(current));
 			current = current.parent;

@@ -77,7 +77,7 @@ public class PianoFingering {
 		if(FingerTree.end_index==Integer.MAX_VALUE)
 			FingerTree.end_index = song.getLength()-1;
 		
-		System.out.println("Song: "+song.toString());
+		System.out.println(song.toString());
 		FingerTree ft = new FingerTree();
 		long start = System.currentTimeMillis();
 		ft.generateTree(song, 0);

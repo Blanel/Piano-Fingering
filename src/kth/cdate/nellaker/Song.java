@@ -19,8 +19,10 @@ public class Song {
 	private static final int[] song = {0,2,4,5,7,9,11};
 	private static final int[] song2 = {69,60,69,76};
 	private static final boolean debug = false;
+	private File midi;
 	public Song(File midi)
 	{
+		this.midi = midi;
 		try {
 			tones = parseMidi(midi);
 		} catch (Exception e) {
@@ -116,7 +118,8 @@ public class Song {
 	public String toString()
 	{
 		StringBuilder sb = new StringBuilder();
-		for(int i = FingerTree.start_index ; i < FingerTree.end_index ; i++)
+		sb.append("Midi File: "+midi.getName()+"\n");
+		for(int i = FingerTree.start_index ; i <= FingerTree.end_index ; i++)
 		{
 			sb.append(Song.getNoteName(tones.get(i))+Song.getOctave(tones.get(i))+"  ");
 		}
