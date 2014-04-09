@@ -89,7 +89,7 @@ public class PianoFingering {
 			System.err.println("Final Score: "+ft.getBest().getCurrentScore());
 		else
 			System.err.println("No path found, try lowering MAX_SCORE in FingerTree");
-		String out = ft.getAllBest();
+		String out = ft.getBestSequence();
 		System.out.println(out);
 		
 	}

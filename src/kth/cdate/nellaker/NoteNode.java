@@ -30,7 +30,7 @@ public class NoteNode {
 		this.parent = parent;
 		this.song = song;
 		this.nextFinger = nextFinger;
-		rulesTriggered = new boolean[12];
+		rulesTriggered = new boolean[13];
 		generateValue();
 	}
 
@@ -147,13 +147,11 @@ public class NoteNode {
 			StringBuilder sb = new StringBuilder();
 			sb.append(finger+"\t"+note+"\t"+score+"\t[");
 
-			for(int i = 0 ; i<11 ; i++)
+			for(int i = 0 ; i<13 ; i++)
 			{
 				if(rulesTriggered[i])
 					sb.append((i+1)+" ");
 			}
-			if(rulesTriggered[11])
-				sb.append(12);
 			sb.append("]");
 			return sb.toString();
 		}

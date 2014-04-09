@@ -30,7 +30,7 @@ public class IntervalEvalutation {
 	public static int getScore(NoteNode nn, Song song)
 	{
 
-		boolean[] rulesTriggered = new boolean[12];
+		boolean[] rulesTriggered = new boolean[13];
 		DebugMessage.msg(("NEW NODE"), debug);
 		int score = 0;
 
@@ -432,15 +432,23 @@ public class IntervalEvalutation {
 				{
 					if(interval2!=0)
 					{
+						rulesTriggered[12]=true;
 						score++;
 					}
 				}
 				else
 				{
 					if(interval2>maxRel[fIndex2])
+					{
+						rulesTriggered[12]=true;
 						score++;
+					}
+						
 					if(interval2<minRel[fIndex2])
+					{
+						rulesTriggered[12]=true;
 						score++;
+					}
 				}
 			}
 		}
